@@ -15,8 +15,15 @@
                 AddNewPlayer(this);
             });
             $(".Refresh").click(function () {
-                $(".MyClass").html("");
-                PlayerNames = [];
+                var MyClass = $(".MyClass");
+                if($(MyClass).find(".active").length == 0) {
+                    $(MyClass).html("");
+                    PlayerNames = [];
+                }
+                else{
+                    $(MyClass).find(".active").remove();
+                }
+                ReCreatePlayerName();
             });
             $(".ShuffleRoles").click(function () {
                 shufflePlayers();
@@ -30,11 +37,19 @@
                 AutoAdd(this);
             });
         });
+        function ReCreatePlayerName(){
+            PlayerNames = [];
+            var MyClass = $(".MyClass");
+            for(var i=0;i<$(MyClass).children().length;i++){
+                PlayerNames.push($($(MyClass).children()[i]).find('b').html());
+            }
+        }
         function AddNewPlayer(btn){
             var PlayerName = $($(btn).parent().parent().find(".form-control")).val();
             AddRows(PlayerName);
             $($(btn).parent().parent().find(".form-control")).val("");
             $($(btn).parent().parent().find(".form-control")).focus();
+            SetEvents();
         }
         function shufflePlayers() {
             var MyClass = $(".MyClass");
@@ -48,9 +63,10 @@
                     $($(MyClass).children()[i]).addClass("list-group-item");
                     $($(MyClass).children()[i]).addClass("list-group-item-" + ColorArray[PositionArray[i]-1]);
                     $($(MyClass).children()[i]).html("");
-                    $($(MyClass).children()[i]).html( "<h6>" + PlayerNames[i] + '  <span class="FontSize16 pull-right label label-' + ColorArray[PositionArray[i]-1] + '">' + RoleArray[PositionArray[i]-1] + "</span></h6>");
+                    $($(MyClass).children()[i]).html( "<h6><b>" + PlayerNames[i] + '</b>  <span class="FontSize16 pull-right label label-' + ColorArray[PositionArray[i]-1] + '">' + RoleArray[PositionArray[i]-1] + "</span></h6>");
                 }
             }
+            SetEvents();
         }
         function ShufflePositions(Array){
             var counter = Array.length;
@@ -67,7 +83,7 @@
             var MyClass = $(".MyClass");
             if(PlayerName.trim() != "" && $(MyClass).children().length < 5 ){
                 var NewPlayerHTML = '<li class="list-group-item">';
-                NewPlayerHTML += "<h6>" + PlayerName.toUpperCase() + "</h6>";
+                NewPlayerHTML += "<h6><b>" + PlayerName.toUpperCase() + "</b></h6>";
                 NewPlayerHTML += "</li>";
                 PlayerNames.push(PlayerName.toUpperCase());
                 $(MyClass).append(NewPlayerHTML);
@@ -82,6 +98,18 @@
                 else
                     AddRows(WWD[i]);
             }
+            SetEvents();
+        }
+        function SetEvents(){
+            $(".list-group-item").unbind("click");
+            $(".list-group-item").click(function(){
+                if($(this).hasClass("active")){
+                    $(this).removeClass("active");
+                }
+                else{
+                    $(this).addClass("active");
+                }
+            });
         }
     </script>
 </head>

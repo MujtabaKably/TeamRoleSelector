@@ -17,3 +17,6 @@
 .MarginTop5{
     margin-top: 5px;
 }
+.list-group-item:hover{
+    background-color: rgba(202,202,202,0.3);
+}
